@@ -3,7 +3,7 @@ title: "Assignment2-Submission"
 output: html_document
 ---
 # Name: Sieun Bae
-# ID: 2016310153
+
 
 # 0 Ensure ggplot2 is loaded
 ```{r}
