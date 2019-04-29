@@ -1,0 +1,123 @@
+---
+title: "Assignment2-Submission"
+output: html_document
+---
+# Name: Sieun Bae
+# ID: 2016310153
+
+# 0 Ensure ggplot2 is loaded
+```{r}
+library(ggplot2)
+```
+
+# Q1a) Meaning of "?" in dataset:
+# Answer: NA
+
+```{r}
+# Q1b) Read diabetes_readmit.csv into a data frame. Enter your code below
+df <- read.csv("diabetes_readmit.csv", na.strings = "?")
+```
+
+# Q1c) What is the effect of using na.strings="?" in read.csv
+# Answer: It replaces "?" string to NA, so it shows actual meaning of the data, and makes easier to handle it.
+
+```{r}
+# Q2a) Calculate the number of NAs in each column and sort them in decreasing order. Enter your code below.
+sort(colSums(is.na(df)), decreasing = TRUE)
+```
+# column name with most NAs: weight
+# column name with second most NAs: medical_specialty
+
+##  Bonus
+```{r}
+# Q2a_bonus) Instead of just returning the number of NAs in the column, return the number of NAs as a proportion of the overall data.
+sort(colSums(is.na(df))/nrow(df), decreasing = TRUE)
+```
+
+
+```{r}
+# Q2b) Remove two columns with most NAs
+df <- subset(df, select = -c(weight, medical_specialty))
+```
+
+# Q2c) Which other one or two column(s) you would choose to remove and why?
+# Answer: The following columns which were sorted in decreasing order by the number of NAs are "race" and "diag_3". Because those two have more NA elements, they can be the candidates to be chosen. 
+# However, "race" has 2273 NA elements which is just 2.2%, and "diag_3" has 1423 NA elements which is just 1.3% (occupy few part of total). So I would not remove any column right now. But if I face an unavoidable time to reduce the data size, I would choose race, then diag_3. 
+
+```{r}
+# Q3a) Convert readmitted to an ordered factor 
+df$readmitted <- 
+  factor(df$readmitted, levels = c("NO", "<30", ">30"), ordered=TRUE)
+str(df$readmitted)
+```
+
+```{r}
+# Q3b) Plot bar of age filled by readmitted
+ggplot(df, aes(age, readmitted)) +
+  geom_col()
+```
+
+# Q3c) The group with the highest readmission count:
+# Answer: age "70-80" group has the highest readmission count
+
+```{r}
+# Q3d) Density plot of time in hospital 
+ggplot(df, aes(time_in_hospital)) + 
+  geom_density()
+```
+
+```{r}
+# Q3e) Facet the density plot with age
+ggplot(df, aes(time_in_hospital, fill=age)) + 
+  geom_density() +
+  facet_wrap(df$age)
+```
+
+```{r}
+# Q3f) Adding gender in.
+ggplot(df, aes(time_in_hospital, fill=gender)) + 
+  geom_density() +
+  facet_wrap(df$age)
+```
+
+```{r}
+# Q3g) Replot without errorneous values "Unknown/Invalid"
+ggplot(df[df$gender %in% c("Female", "Male"),], 
+       aes(time_in_hospital, fill=gender)) +
+  geom_density() +
+  facet_wrap(df[df$gender %in% c("Female", "Male"),]$age)
+```
+
+```{r}
+# Q3h) Smoother visualisation and labels
+ggplot(df[df$gender %in% c("Female", "Male"),], 
+       aes(time_in_hospital, fill=gender)) +
+  geom_density(alpha = 0.5, adjust = 2) +
+  facet_wrap(df[df$gender %in% c("Female", "Male"),]$age) +
+  scale_fill_discrete("Gender") +
+  ggtitle("Time Spent in Hospital by Age Group and Gender by Sieun Bae") +
+  xlab("Time Spent in Hospital") +
+  ylab("Density") 
+```
+
+```{r}
+# Q3i) Save the last plot as a .jpg file.
+  ggsave(filename = "SieunBae-2016310153-diabetes.jpg", width=7, height=5)
+```
+
+# Q3j) Graph interpretation:
+# Answer: Older ppl spent more time in hospital. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
